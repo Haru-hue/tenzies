@@ -71,22 +71,24 @@ function App () {
                 key={die.id} holdDice={()=>holdDice(die.id)}/>
     })
 
-    function startGame () {
-        if(user.length>3) {
-            setGame(true)
-            start()
-        } else if(user.length === 0) {
-            alert("Enter a username to play")
-        }
-        else {
-            alert(`Username should be more than ${user.length} letter ${user.length > 1 ? "s" : ""}`)
-        }
-    }
-
     function handleChange (event) {
         const { value } = event.target
         setUser(value)
     }
+
+    function startGame () {
+        if(user.length>=3 || user.length<=10)  {
+            setGame(true)
+           start()
+        } else if(user === "") {
+            alert("Enter a username to play")
+        }
+        else {
+            alert(`Let the username between 3-10 characters`)
+        }
+    }
+
+    console.log(user)
 
     return (
         <main>
@@ -124,10 +126,10 @@ function App () {
             </div>
             <div className="player">
                    <h3 className="player--name">Current player:<br/>
-                    {user}</h3>
+                    <div className="user">{user}</div></h3>
                     <div>
                     <h3 className="player--name">Time elapsed:<br/>
-                    {minutes}:{seconds}</h3>
+                    {minutes}:{seconds > 9 ? "" : "0"}{seconds}</h3>
                     </div>
                 </div>
             </>

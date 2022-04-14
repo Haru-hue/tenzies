@@ -18,6 +18,7 @@ main {
     display: flex;
     flex-direction: column;
     padding: 40px;
+
 }
 
 .container {
@@ -112,4 +113,9 @@ main {
 
 .player--name {
     font-size: 1.4rem;
+}
+
+.user {
+    max-width: 200px;
+    word-wrap: break-word;
 }
