@@ -6,6 +6,7 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import { useStopwatch } from 'react-timer-hook';
 import { nanoid } from "nanoid"
 import { useAtom } from 'jotai';
+import axios from "axios"
 import "./App.css"
 
 function App () {
@@ -103,7 +104,9 @@ function App () {
         else {
             alert(`Let the username between 3-10 characters`)
         }
-        submitUser()
+        axios.post("http://localhost:5000/api", { player: player }).then((res) => {
+            console.log(res);
+        });
     }
     return (
         <main>
