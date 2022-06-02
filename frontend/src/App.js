@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from "react"
 import Die from "./components/Die"
+import user from './var/atom'
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useStopwatch } from 'react-timer-hook';
 import { nanoid } from "nanoid"
+import { useAtom } from 'jotai';
 import "./App.css"
 
 function App () {
     const [dice, setDice] = useState(allNewDice())
     const [tenzies, setTenzies] = useState(false)
     const [game, setGame] = useState(false)
-    const [user, setUser] = useState("")    
+    const [player, setPlayer] = useAtom(user)    
 
     const { width, height } = useWindowSize()
     const {seconds, minutes,start, pause,reset} = useStopwatch({ autoStart: true });
@@ -73,25 +75,39 @@ function App () {
 
     function handleChange (event) {
         const { value } = event.target
-        setUser(value)
+        setPlayer(value)
+    }
+
+    const submitUser = async () => {
+        const username = player
+
+        const result = await fetch('http://localhost:5000/api', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(username)
+        })
+
+        const JSONResult = await result.json()
+        console.log(JSONResult)
     }
 
     function startGame () {
-        if(user.length>=3 || user.length<=10)  {
+        if(player.length>=3 || player.length<=10)  {
             setGame(true)
            start()
-        } else if(user === "") {
+        } else if(player === "") {
             alert("Enter a username to play")
         }
         else {
             alert(`Let the username between 3-10 characters`)
         }
+        submitUser()
     }
-
-    console.log(user)
-
     return (
         <main>
+            
             {
                 !game ?
                 <div className="new-game">
@@ -99,7 +115,7 @@ function App () {
                     <input 
                         type="text"
                         className="input--box"
-                        name="user"
+                        name="player"
                         placeholder="Enter your name"
                         onChange={handleChange}
                     />
@@ -126,7 +142,7 @@ function App () {
             </div>
             <div className="player">
                    <h3 className="player--name">Current player:<br/>
-                    <div className="user">{user}</div></h3>
+                    <div className="user">{player}</div></h3>
                     <div>
                     <h3 className="player--name">Time elapsed:<br/>
                     {minutes}:{seconds > 9 ? "" : "0"}{seconds}</h3>
