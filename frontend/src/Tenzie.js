@@ -8,7 +8,7 @@ function Tenzie () {
   const [player] = useAtom(user);
 
   async function callAPI () {
-    await fetch("http://localhost:5000/api")
+    await fetch("http://localhost:5000/")
     .then(res => res.text())
     .then(res => setAPIResponse(res))
   }      

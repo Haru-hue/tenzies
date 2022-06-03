@@ -13,10 +13,12 @@ function App () {
     const [dice, setDice] = useState(allNewDice())
     const [tenzies, setTenzies] = useState(false)
     const [game, setGame] = useState(false)
+    const [time, setTime] = useState("0.00")
+    const [count, setCount] = useState(0)
     const [player, setPlayer] = useAtom(user)    
 
     const { width, height } = useWindowSize()
-    const {seconds, minutes,start, pause,reset} = useStopwatch({ autoStart: true });
+    const {seconds, minutes, start, pause, reset} = useStopwatch({ autoStart: true });
 
     const confetti = (
         <Confetti
@@ -26,14 +28,29 @@ function App () {
     )
 
     useEffect(() => {
+        const submitUser = () => {
+            const body = ({
+                username: player,
+                time: time,
+                rolls: count
+            });
+            axios.post('http://localhost:5000/', body, {
+                header: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
+
         const check = dice.every(die => die.isHeld)
         const firstValue = dice[0].value
         const allValues = dice.every(die => die.value === firstValue)
         if(check && allValues) {
             setTenzies(true)
             pause()
+            setTime(minutes + ":" + seconds)
+            submitUser()
         }
-    }, [dice, pause])
+    }, [dice, pause, minutes, seconds, count, player, time])
 
     function generateNewDice () {
         return {
@@ -56,10 +73,12 @@ function App () {
             setDice(oldDice => oldDice.map(die => {
                 return die.isHeld ? die : generateNewDice()
             }))
+            setCount(prev => prev + 1)
         } else {
             setTenzies(false)
             reset()
             setDice(allNewDice())
+            setCount(0)
         }
     }
 
@@ -79,21 +98,6 @@ function App () {
         setPlayer(value)
     }
 
-    const submitUser = async () => {
-        const username = player
-
-        const result = await fetch('http://localhost:5000/api', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(username)
-        })
-
-        const JSONResult = await result.json()
-        console.log(JSONResult)
-    }
-
     function startGame () {
         if(player.length>=3 || player.length<=10)  {
             setGame(true)
@@ -104,9 +108,6 @@ function App () {
         else {
             alert(`Let the username between 3-10 characters`)
         }
-        axios.post("http://localhost:5000/api", { player: player }).then((res) => {
-            console.log(res);
-        });
     }
     return (
         <main>
@@ -115,18 +116,20 @@ function App () {
                 !game ?
                 <div className="new-game">
                     <h2 className="title">Enter Username:</h2>
-                    <input 
-                        type="text"
-                        className="input--box"
-                        name="player"
-                        placeholder="Enter your name"
-                        onChange={handleChange}
-                    />
-                        <button 
-                            onClick = {startGame}
-                            className="dice--button">
-                        Start Game
-                    </button>
+                    <form onSubmit={startGame}>
+                        <input 
+                            type="text"
+                            className="input--box"
+                            name="player"
+                            placeholder="Enter your name"
+                            onChange={handleChange}
+                        />
+                            <button 
+                                type="submit"
+                                className="dice--button">
+                            Start Game
+                        </button>
+                    </form>
                 </div>
                  :
             <>
@@ -137,9 +140,10 @@ function App () {
                 <div className="container">
                     {diceElements}
                 </div>
+                    Rolls: {count}
                 <button 
-                onClick = {rollDice}
-                className="dice--button">
+                    onClick = {rollDice}
+                    className="dice--button">
                     {tenzies ? "New Game" : "Roll"}
                 </button>
             </div>

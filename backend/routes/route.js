@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router()
+const tenzies = require('../controllers/tenzie')
 
 router.get('/', (req, res) => {
     res.send('The API endpoint')
 })
 
-router.post('/api', (req, res, next) => {
-   console.log(req.body)
-})
+router.post('/', tenzies.addPlayer)
 
 
 module.exports = router

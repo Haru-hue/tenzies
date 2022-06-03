@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 
-var game = new mongoose.Schema({
+var player = new mongoose.Schema({
     username: {
         type: String,
-        required: 'This field is required'
+    },
+    time: {
+        type: String,
+    },
+    rolls: {
+        type: Number
     }
 })
 
-mongoose.model('Game', game)
+module.exports = mongoose.model('Player', player)
