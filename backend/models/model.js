@@ -4,10 +4,10 @@ var player = new mongoose.Schema({
     username: {
         type: String,
     },
-    time: {
+    totalTime: {
         type: String,
     },
-    rolls: {
+    totalRounds: {
         type: Number
     }
 })

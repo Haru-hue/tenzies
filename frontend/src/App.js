@@ -1,22 +1,20 @@
 import React, {useEffect, useState} from "react"
 import Die from "./components/Die"
-import user from './var/atom'
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useStopwatch } from 'react-timer-hook';
 import { nanoid } from "nanoid"
-import { useAtom } from 'jotai';
 import axios from "axios"
 import "./App.css"
+import NewGame from "./components/NewGame"
+import Scores from "./components/Scores";
 
 function App () {
     const [dice, setDice] = useState(allNewDice())
     const [tenzies, setTenzies] = useState(false)
     const [game, setGame] = useState(false)
-    const [time, setTime] = useState("0.00")
     const [count, setCount] = useState(0)
-    const [player, setPlayer] = useAtom(user)    
-
+    const [player, setPlayer] = useState("")
     const { width, height } = useWindowSize()
     const {seconds, minutes, start, pause, reset} = useStopwatch({ autoStart: true });
 
@@ -27,30 +25,30 @@ function App () {
       />
     )
 
-    useEffect(() => {
-        const submitUser = () => {
-            const body = ({
-                username: player,
-                time: time,
-                rolls: count
-            });
-            axios.post('http://localhost:5000/', body, {
-                header: {
-                    'Content-Type': 'application/json'
-                }
-            })
-        }
+    const submitUser = () => {
+        const body = ({
+            username: player,
+            totalTime: `${minutes}:${seconds}`,
+            totalRounds: count
+        });
+        axios.post('http://localhost:5000/', body, {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
 
+    useEffect(() => {
         const check = dice.every(die => die.isHeld)
         const firstValue = dice[0].value
         const allValues = dice.every(die => die.value === firstValue)
-        if(check && allValues) {
+        if(check && allValues && !tenzies) {
             setTenzies(true)
             pause()
-            setTime(minutes + ":" + seconds)
             submitUser()
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }
-    }, [dice, pause, minutes, seconds, count, player, time])
+    }, [dice, pause])
 
     function generateNewDice () {
         return {
@@ -113,25 +111,7 @@ function App () {
         <main>
             
             {
-                !game ?
-                <div className="new-game">
-                    <h2 className="title">Enter Username:</h2>
-                    <form onSubmit={startGame}>
-                        <input 
-                            type="text"
-                            className="input--box"
-                            name="player"
-                            placeholder="Enter your name"
-                            onChange={handleChange}
-                        />
-                            <button 
-                                type="submit"
-                                className="dice--button">
-                            Start Game
-                        </button>
-                    </form>
-                </div>
-                 :
+                !game ? <NewGame handleChange={handleChange} startGame={startGame}/> :
             <>
             <div className="game">
                  {tenzies ? confetti : ""}
@@ -154,7 +134,8 @@ function App () {
                     <h3 className="player--name">Time elapsed:<br/>
                     {minutes}:{seconds > 9 ? "" : "0"}{seconds}</h3>
                     </div>
-                </div>
+            </div>
+            <Scores game={game}/>
             </>
             }
         </main>
