@@ -29,12 +29,14 @@ export default function Game (props) {
             totalTime: `${minutes}:${seconds}`,
             totalRounds: count
         });
-        axios.post(`${env.REACT_APP_DATABASE_URL}`, body, {
+        axios.post(env.REACT_APP_DATABASE_URL, body, {
             header: {
                 'Content-Type': 'application/json'
             }
         })
     }
+
+    console.log(process.env.NODE_ENV)
 
     useEffect(() => {
         const check = dice.every(die => die.isHeld)
