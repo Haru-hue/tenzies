@@ -36,8 +36,6 @@ export default function Game (props) {
         })
     }
 
-    console.log(process.env.NODE_ENV)
-
     useEffect(() => {
         const check = dice.every(die => die.isHeld)
         const firstValue = dice[0].value

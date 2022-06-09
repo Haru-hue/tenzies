@@ -11,7 +11,6 @@ const Scores = () => {
             console.log(data)
             setResults(data)
         }  
-
         callAPI()
     }, [])
 
