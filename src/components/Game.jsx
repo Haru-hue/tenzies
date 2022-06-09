@@ -5,6 +5,7 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import { useStopwatch } from 'react-timer-hook';
 import { nanoid } from "nanoid"
 import axios from "axios"
+import env from 'react-dotenv'
 
 export default function Game (props) {
     const [dice, setDice] = useState(allNewDice())
@@ -28,7 +29,7 @@ export default function Game (props) {
             totalTime: `${minutes}:${seconds}`,
             totalRounds: count
         });
-        axios.post(`${process.env.REACT_APP_DATABASE_URL}`, body, {
+        axios.post(`${env.REACT_APP_DATABASE_URL}`, body, {
             header: {
                 'Content-Type': 'application/json'
             }
