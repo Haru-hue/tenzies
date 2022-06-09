@@ -6,7 +6,7 @@ const Scores = () => {
 
     useEffect(() => {
         async function callAPI () {
-            const res = await fetch("http://localhost:5000/")
+            const res = await fetch(`${process.env.REACT_APP_DATABASE_URL}`)
             const data = await res.json()
             console.log(data)
             setResults(data)

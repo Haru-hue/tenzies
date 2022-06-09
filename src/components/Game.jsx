@@ -28,7 +28,7 @@ export default function Game (props) {
             totalTime: `${minutes}:${seconds}`,
             totalRounds: count
         });
-        axios.post('http://localhost:5000/', body, {
+        axios.post(`${process.env.REACT_APP_DATABASE_URL}`, body, {
             header: {
                 'Content-Type': 'application/json'
             }
