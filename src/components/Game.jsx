@@ -43,9 +43,9 @@ export default function Game (props) {
             setTenzies(true)
             pause()
             submitUser()
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }
-    }, [dice, pause])
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dice, pause, tenzies])
     
     function generateNewDice () {
         return {
