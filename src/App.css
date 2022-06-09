@@ -7,6 +7,7 @@ body {
     margin: 0;
     background: #0B2434;
     padding: 50px;
+    overflow-x: hidden;
 }
 
 main {
@@ -117,4 +118,32 @@ main {
 .user {
     max-width: 200px;
     word-wrap: break-word;
+}
+
+.leaderboard {
+    position: absolute;
+    margin-top: -20rem;
+    right: 4rem;
+    text-align: center;
+    background: #59E391;
+    padding: 1.5rem;
+}
+
+figure {
+    width: 75px;
+    height: 5px;
+}
+
+figure > img {
+    max-width: 100%;
+    position: absolute;
+    width: 75px;
+    margin-top: -3rem;
+    margin-left: 45px;
+}
+
+th {
+    padding: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
 }
