@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import env from "react-dotenv"
 import pin from "../pin.png"
 
 const Scores = () => {
@@ -6,7 +7,7 @@ const Scores = () => {
 
     useEffect(() => {
         async function callAPI () {
-            const res = await fetch(`${process.env.REACT_APP_DATABASE_URL}`)
+            const res = await fetch(`${env.REACT_APP_DATABASE_URL}`)
             const data = await res.json()
             console.log(data)
             setResults(data)
